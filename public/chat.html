@@ -12,17 +12,19 @@
 <body class="chat">
 
   <div class="chat__sidebar">
-    <h3>People</h3>
+    <h3 id="rooms"></h3>
     <div id="users"></div>
   </div>
 
   <div class="chat__main">
-    <ol id="messages" class="chat__messages"></ol>
+    <ol id="messages" class="chat__messages">
+    </ol>
+    <span id="typing-text"></span>
 
     <div class="chat__footer">
       <form id="message-form">
-        <input name="message" type="text" placeholder="Message" autofocus autocomplete="off"/>
-        <button>Send</button>
+        <input name="message" id="message-box" type="text" placeholder="Message" autofocus autocomplete="off"/>
+        <button id="send-message">Send</button>
       </form>
       <button id="send-location">Send location</button>
     </div>
