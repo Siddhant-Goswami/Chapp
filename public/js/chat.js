@@ -1,4 +1,7 @@
+/* eslint-disable no-undef */
 var socket = io();
+var params = jQuery.deparam(window.location.search);
+var timeout = undefined;
 
 function scrollToBottom () {
   // Selectors
@@ -16,9 +19,11 @@ function scrollToBottom () {
   }
 }
 
-socket.on('connect', function () {
-  var params = jQuery.deparam(window.location.search);
+function emitUserIsTyping(typing){
+  socket.emit('isTyping', {name: params.name, typing: typing})
+}
 
+socket.on('connect', function () {
   socket.emit('join', params, function (err) {
     if (err) {
       alert(err);
@@ -34,13 +39,15 @@ socket.on('disconnect', function () {
 });
 
 socket.on('updateUserList', function (users) {
-  var ol = jQuery('<ol></ol>');
+  var ul = jQuery('<ul></ul>');
 
   users.forEach(function (user) {
-    ol.append(jQuery('<li></li>').text(user));
+    ul.append(jQuery('<li></li>').text(user));
   });
 
-  jQuery('#users').html(ol);
+  jQuery('#rooms').text('#'+params.room);
+
+  jQuery('#users').html(ul);
 });
 
 socket.on('newMessage', function (message) {
@@ -69,17 +76,39 @@ socket.on('newLocationMessage', function (message) {
   scrollToBottom();
 });
 
-jQuery('#message-form').on('submit', function (e) {
-  e.preventDefault();
+socket.on('typing', function(user){
+  if(user.typing && user.name!==params.name)
+    jQuery('#typing-text').text(user.name + ' is typing...');
+  else
+    jQuery('#typing-text').text('');
 
+  clearTimeout(timeout)
+  timeout=setTimeout(emitUserIsTyping, 1500)
+
+});
+
+jQuery('#message-box').keydown(function(){
+  emitUserIsTyping(true);
+  clearTimeout(timeout)
+  timeout=setTimeout(emitUserIsTyping, 1500)
+});
+
+
+jQuery('#message-form').on('submit', function (e) {
   var messageTextbox = jQuery('[name=message]');
 
-  socket.emit('createMessage', {
-    from: 'User',
-    text: messageTextbox.val()
-  }, function () {
-    messageTextbox.val('')
-  });
+  e.preventDefault();
+  clearTimeout(timeout);
+  emitUserIsTyping(false);
+
+  if(messageTextbox.val()!==''){
+    socket.emit('createMessage', {
+      from: params.name,
+      text: messageTextbox.val()
+    }, function () {
+      messageTextbox.val('')
+    });
+  }
 });
 
 var locationButton = jQuery('#send-location');
@@ -93,6 +122,7 @@ locationButton.on('click', function () {
   navigator.geolocation.getCurrentPosition(function (position) {
     locationButton.removeAttr('disabled').text('Send location');
     socket.emit('createLocationMessage', {
+      from: params.name,
       latitude: position.coords.latitude,
       longitude: position.coords.longitude
     });
