@@ -4,7 +4,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Chat | ChatApp</title>
+  <title>ChaApp by Siddhant Goswami</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <link rel="stylesheet" href="/css/styles.css">
 </head>
@@ -14,6 +14,7 @@
   <div class="chat__sidebar">
     <h3 id="rooms"></h3>
     <div id="users"></div>
+    <a class="branding" href="https://siddhantgoswami.com/" target="_blank">#siddhant_goswami</a>
   </div>
 
   <div class="chat__main">
@@ -23,10 +24,12 @@
 
     <div class="chat__footer">
       <form id="message-form">
-        <input name="message" id="message-box" type="text" placeholder="Message" autofocus autocomplete="off"/>
+        <input name="message" id="message-box" type="text" placeholder="Message" autocomplete="off"/>
+        <span id="emoji-button">😎</span>
         <button id="send-message">Send</button>
       </form>
       <button id="send-location">Send location</button>
+
     </div>
   </div>
 
@@ -56,6 +59,7 @@
     </li>
   </script>
 
+  <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@2.12.1/dist/index.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/libs/jquery-3.1.0.min.js"></script>
   <script src="/js/libs/moment.js"></script>

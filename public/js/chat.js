@@ -19,6 +19,23 @@ function scrollToBottom () {
   }
 }
 
+// emoji picker
+window.addEventListener('DOMContentLoaded', function() {
+  var button = document.querySelector('#emoji-button');
+  var picker = new EmojiButton();
+
+  picker.on('emoji', emoji => {
+    document.querySelector('#message-box').value += emoji;
+    window.setTimeout(function () { 
+      document.querySelector("#message-box").focus();   
+    }, 0); 
+  });
+
+  button.addEventListener('click', () => {
+    picker.togglePicker(button);
+  });
+});        
+      
 function emitUserIsTyping(typing){
   socket.emit('isTyping', {name: params.name, typing: typing})
 }

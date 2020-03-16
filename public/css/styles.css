@@ -213,6 +213,23 @@ button:disabled {
     margin-left: 12px;
     margin-bottom: 5px;
 }
+#emoji-button {
+    font-size: larger;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    right: 13rem;
+    padding-top: 5px;
+  }
+.branding {
+    color: white;
+    text-decoration: none;
+    position: absolute;
+    bottom: 10px;
+    padding: 0 15px;
+    font-weight: bold;
+    text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
+}
 @media (max-width: 600px) {
   * {
     font-size: 1rem;
@@ -228,5 +245,8 @@ button:disabled {
   }
   .chat__footer button {
     margin-right: 0;
+  }
+  #emoji-button {
+    right: 5rem;
   }
 }
