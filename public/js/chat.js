@@ -96,12 +96,23 @@ jQuery('#message-box').keydown(function(){
 
 jQuery('#message-form').on('submit', function (e) {
   var messageTextbox = jQuery('[name=message]');
-
+  var formattedTime = moment().format('h:mm a');
+  var template = $("#message-template").html();
+  var html = Mustache.render(template, {
+      text: messageTextbox.val(),
+      from: params.name,
+      createdAt: formattedTime
+  }, function(){ messageTextbox.val(''); });
+  
   e.preventDefault();
   clearTimeout(timeout);
   emitUserIsTyping(false);
 
   if(messageTextbox.val()!==''){
+    //append user's own message to screen
+    $("#messages").append(html);
+    scrollToBottom();
+    //emit to broadcast message
     socket.emit('createMessage', {
       from: params.name,
       text: messageTextbox.val()
